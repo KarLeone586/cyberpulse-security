@@ -151,3 +151,16 @@ document.addEventListener('DOMContentLoaded',function(){
   renderDemoAccess();
 });
 </script>
+
+<style id="cp-payment-later">.paid-access{opacity:.78}.paid-access strong:after{content:' · позже';color:#9bb3c8;font-size:12px;font-family:Manrope;font-weight:400}</style>
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+  document.querySelectorAll('#catalog .product .product-bottom .button').forEach(function(btn){
+    if(btn.textContent.includes('Подключить'))btn.textContent='Оставить заявку';
+    if(btn.textContent.includes('Запросить аудит'))btn.textContent='Оставить заявку';
+  });
+  var box=document.querySelector('.paid-access');
+  if(box){var span=box.querySelector('span');if(span)span.textContent='Оплата будет добавлена позже. Сейчас оставьте заявку — мы свяжемся с вами в Telegram: @TENOR870.';var list=box.querySelector('.demo-list');if(list)list.remove();}
+  document.addEventListener('click',function(e){var btn=e.target.closest('#catalog .product .product-bottom .button');if(!btn)return;e.preventDefault();e.stopImmediatePropagation();openOrder();},true);
+});
+</script>
