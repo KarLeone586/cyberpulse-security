@@ -115,3 +115,39 @@
 <style>.catalog-question{display:flex;align-items:center;justify-content:space-between;gap:18px;margin:0 0 24px;padding:16px 18px;border:1px solid var(--line);background:rgba(13,32,53,.72);border-radius:6px}.catalog-question label{font-weight:700;font-size:14px}.catalog-question select{min-width:250px;padding:11px 12px;background:#081a2c;border:1px solid #377fb2;color:var(--ink);border-radius:4px;font:13px Manrope}@media(max-width:600px){.catalog-question{display:block}.catalog-question select{width:100%;margin-top:12px}}</style><script>document.addEventListener('DOMContentLoaded',()=>{const section=document.querySelector('#catalog');const grid=section?.querySelector('.catalog');if(!grid)return;const q=document.createElement('div');q.className='catalog-question';q.innerHTML='<label for="serviceNeed">Что вам нужно?</label><select id="serviceNeed"><option value="all">Показать все услуги</option><option value="personal">Личная защита</option><option value="family">Защита семьи</option><option value="website">Защита сайта</option><option value="business">Защита бизнеса</option><option value="consultation">Консультация</option></select>';section.querySelector('.section-head').after(q);const cards=[...grid.querySelectorAll('.product')];const kinds=['personal','personal','website','personal','family','business'];cards.forEach((c,i)=>c.dataset.kind=kinds[i]||'all');const extra=[['Enterprise · Корпоративная защита','Индивидуальная стратегия, интеграции, SOC/MDR и договор для крупного бизнеса.','Индивидуальный тариф','Обсудить задачу →','business'],['Консультация','Разбор вашей ситуации со специалистом и понятный план следующих действий.','По записи','Записаться →','consultation']];extra.forEach(([title,desc,price,button,kind])=>{const c=document.createElement('article');c.className='product';c.dataset.kind=kind;c.innerHTML='<small>07 / ИНДИВИДУАЛЬНО</small><h3>'+title+'</h3><p>'+desc+' В сумму входит выбранный формат и указанные услуги.</p><div class="product-bottom"><div class="price-tag">'+price+'</div><button class="button primary" onclick="openOrder()">'+button+'</button></div>';grid.appendChild(c)});q.querySelector('select').onchange=e=>cards.concat([...grid.querySelectorAll('.product')].slice(cards.length)).forEach(c=>c.style.display=e.target.value==='all'||c.dataset.kind===e.target.value?'flex':'none');});</script>
 
 <style>.paid-access{margin-top:22px;padding:18px;border:1px solid #377fb2;background:rgba(13,32,53,.65);border-radius:6px}.paid-access strong{display:block;color:var(--mint);margin-bottom:7px}.paid-access span{font-size:13px;color:var(--muted);line-height:1.5}</style><script>document.addEventListener('DOMContentLoaded',()=>{const order=document.getElementById('orderModal');if(order){const p=order.querySelector('.modalbox p');if(p)p.textContent='После подтверждения оплаты услуга появится в личном кабинете и станет доступна для заказа.';const email=order.querySelector('input[type=email]');if(email)email.insertAdjacentHTML('afterend','<input id="orderTelegram" placeholder="Telegram для связи: @TENOR870">');const desc=order.querySelector('textarea');if(desc)desc.placeholder='Что нужно обезопасить? Опишите задачу без паролей, PIN, CVV и кодов';const result=document.getElementById('orderResult');if(result){const old=window.submitOrder;window.submitOrder=function(){if(old)old();result.textContent='Заявка принята. После подтверждения оплаты услуга будет открыта в личном кабинете.';}}}const cab=document.querySelector('#cabinet .sospanel');if(cab&&!document.querySelector('.paid-access'))cab.insertAdjacentHTML('beforeend','<div class="paid-access"><strong>Оплаченные услуги</strong><span>После подтверждения оплаты здесь появится доступ к выбранной услуге и кнопка «Заказать услугу». Работаем по всему миру. Telegram: @TENOR870</span></div>');});</script>
+
+<style id="cp-demo-payment">
+.demo-payment{margin-top:14px;padding:14px 16px;border:1px solid rgba(96,181,255,.35);background:rgba(21,54,90,.32);color:#dbeeff;border-radius:14px}
+.demo-payment strong{color:#78c5ff;display:block;margin-bottom:4px}
+.demo-payment p{margin:0;font-size:14px;line-height:1.5;color:#a9c7df}
+.demo-payment button{margin-top:10px}
+.demo-status{margin-top:10px;color:#86f0c5;font-size:14px}
+</style>
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+  var payButtons=document.querySelectorAll('[data-pay], .product button, #plans button');
+  payButtons.forEach(function(btn){
+    if(btn.dataset.demoBound) return;
+    btn.dataset.demoBound='1';
+    btn.addEventListener('click',function(e){
+      var card=btn.closest('.product,.plan,.card,article')||btn.parentElement;
+      var title=(card&&card.querySelector('h3,h4,.product-title'))?.textContent.trim()||'Выбранная услуга';
+      var price=(card&&card.querySelector('.price,.product-price'))?.textContent.trim()||'';
+      var key='cyberpulse_demo_services';
+      var items=JSON.parse(localStorage.getItem(key)||'[]');
+      if(!items.some(function(x){return x.title===title;})){items.push({title:title,price:price,paidAt:new Date().toISOString(),demo:true});localStorage.setItem(key,JSON.stringify(items));}
+      var cabinet=document.querySelector('#cabinet');
+      if(cabinet){cabinet.scrollIntoView({behavior:'smooth'});}
+      setTimeout(function(){renderDemoAccess();},250);
+    });
+  });
+  function renderDemoAccess(){
+    var box=document.querySelector('.paid-access'); if(!box) return;
+    var items=JSON.parse(localStorage.getItem('cyberpulse_demo_services')||'[]');
+    var list=box.querySelector('.demo-list'); if(!list){list=document.createElement('div');list.className='demo-list';box.appendChild(list);}
+    list.innerHTML=items.length?items.map(function(x){return '<div class="demo-payment"><strong>'+x.title+'</strong><p>'+x.price+' · Демо-доступ активирован</p><p>Услуга доступна для заказа. Свяжитесь с CyberPulseIT в Telegram: @TENOR870.</p><button type="button" class="btn btn-outline" data-demo-order="'+x.title.replace(/"/g,'&quot;')+'">Заказать услугу</button><div class="demo-status" hidden>Заявка отправлена в демо-режиме.</div></div>';}).join(''):'<p>После демо-оплаты выбранная услуга появится здесь.</p>';
+    list.querySelectorAll('[data-demo-order]').forEach(function(b){b.addEventListener('click',function(){var s=b.parentElement.querySelector('.demo-status');s.hidden=false;b.disabled=true;});});
+  }
+  renderDemoAccess();
+});
+</script>
