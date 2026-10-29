@@ -164,3 +164,5 @@ document.addEventListener('DOMContentLoaded',function(){
   document.addEventListener('click',function(e){var btn=e.target.closest('#catalog .product .product-bottom .button');if(!btn)return;e.preventDefault();e.stopImmediatePropagation();openOrder();},true);
 });
 </script>
+
+<script>document.addEventListener('DOMContentLoaded',function(){var p=document.querySelector('#orderModal .modalbox p');if(p)p.textContent='После отправки заявки мы свяжемся с вами и согласуем дальнейшие действия. Оплата пока не подключена.';var r=document.getElementById('orderResult');if(r){var old=window.submitOrder;window.submitOrder=function(){if(old)old();r.textContent='Заявка принята. Мы свяжемся с вами в Telegram: @TENOR870.';}}});</script>
